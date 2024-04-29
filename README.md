@@ -1,2 +1,2 @@
-# JointAL
-Code release for the paper JAL: Joint Active Learning for Traffic Scenes on Object Detection
+# TSceneJAL
+Code release for the paper TSceneJAL: Joint Active Learning of Traffic Scenes for 3D Object Detection
