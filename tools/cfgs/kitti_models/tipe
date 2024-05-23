@@ -1,25 +1,18 @@
 rules:
-0 random
-1 max
-2 sum
-3 mean
-4 car_num
-5 by difficulty label
-6 by mc_dropout(eu_mc)
-7 by (theta)*au + eu , au use means
-8 by (theta)*au + eu , au use max
 
-9 二阶段，第一阶段使用类别熵，第二阶段使用theta*au+eu
+0 Random
+11 Confidence
+6 MC Dropout (eu_mc)
+20 Badge
+21 Coreset
+22 Crb
 
-10 直接使用类别熵
-
-11 confidence
-
-12 二阶段，第一阶段使用统计复杂度，第二阶段使用theta*au+eu
-
-13 三阶段，第一阶段使用类别熵，第二阶段使用theta*au+eu，第三阶段使用similarity
-14 三阶段，第一阶段使用类别熵，第二阶段使用similarity ,第三阶段使用theta*au+eu
-15 二阶段，第一阶段使用类别熵，第二阶段使用similarity
-16 三阶段，第一阶段使用theta*au+eu，第二阶段使用similarity, 第三阶段使用类别熵
-17 三阶段，第一阶段使用theta*au+eu，第二阶段使用类别熵, 第三阶段使用similarity
+7 uncertainty
+10 category entropy
+9 two_stage: fisrt stage category entropy, second stage uncertainty
+15 two_stage: fisrt stage category entropy, second stage similarity
+13 three_stage: fisrt stage category entropy, second stage uncertainty, third stage similarity
+14 three_stage: fisrt stage category entropy, second stage similarity, third stage uncertainty
+16 three_stage: fisrt stage uncertainty, second stage similarity, third stage category entropy
+17 three_stage: fisrt stage uncertainty, second stage category entropy, third stage similarity
 

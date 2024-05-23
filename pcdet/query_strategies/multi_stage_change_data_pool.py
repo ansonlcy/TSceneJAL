@@ -14,8 +14,8 @@ from pcdet.query_strategies.graph_utils import filter_process_det_by_id, get_gra
 os.environ['PATH'] = os.environ['PATH'] + ':/usr/local/cuda/bin'
 
 
-def similarity_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_each, rules=1, score_thresh=0.3, eu_theta=1,
-                          au_theta=1, k1=3, k2=2):
+def multi_stage_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_each, rules=1, score_thresh=0.3, eu_theta=1,
+                           au_theta=1, k1=3, k2=2):
     """
     :param cfg:
     :param args:

@@ -11,7 +11,8 @@ from pcdet.models import load_data_to_gpu, build_network, model_fn_decorator
 from pcdet.utils.al_utils import calculate_category_entropy
 
 
-def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_each, rules=1, score_thresh=0.3, eu_theta=1,
+def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_each, rules=1, score_thresh=0.3,
+                   eu_theta=1,
                    au_theta=1, score_plus=False, score_reverse=False, consider_other=True, k1=3):
     """
 
@@ -72,7 +73,6 @@ def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_eac
     cate_entropy_list = []  # the category entropy
     empty_list = []  # the empty frame
 
-
     for idx, det in enumerate(det_annos):
         if len(det['name'].tolist()) == 0:
             empty_list.append(det['frame_id'])
@@ -94,7 +94,7 @@ def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_eac
             score_list.append(det['score'][choose_idx])
             car_num_list.append(len(choose_idx))
 
-            if rules in [6, 7, 8, 9]:  # use eu or eu + au
+            if rules in [6, 7, 9]:  # use eu or eu + au
                 # if we use mdn than the eu is calulated by each box, so it has the same length of au, and the type is ndarray
                 if isinstance(det['ep'], np.ndarray):
                     eu_list.append(det['ep'][choose_idx])
@@ -122,11 +122,10 @@ def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_eac
             # au_list[i] = (au_list[i] - mean_al_uc) / stdev_al_uc
             au_list[i] = (au_list[i] - min_al_uc) / (max_al_uc - min_al_uc)
 
-
     if rules == 11:
         au_list = score_list
 
-    au_list = combine_uncer_in_frame(au_list, rules=rules)
+    au_list = combine_uncer_in_frame(au_list)
 
     # use 0-1 on eu data if we use eu or eu + au
     if len(eu_list) > 0 and isinstance(eu_list[0], float):
@@ -146,8 +145,8 @@ def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_eac
         eu_list = (eu_list - np.min(eu_list)) / (np.max(eu_list) - np.min(eu_list))
 
     # next to choose the score_list (au or eu or eu + au)
-    if rules in [7, 8, 9]:
-        # choose_score_list = eu_list + eu_theta * au_list  # 这里有问题eu的比例放错位置了
+    if rules in [7, 9]:
+        # choose_score_list = eu_list + eu_theta * au_list
         choose_score_list = eu_theta * eu_list + au_theta * au_list
     elif rules == 6:
         choose_score_list = eu_list
@@ -165,8 +164,7 @@ def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_eac
     # 直接使用类别熵作为筛选依据
     if rules == 10:
         choose_score_list = np.array(cate_entropy_list)
-    if rules == 4:
-        choose_score_list = np.array(car_num_list)
+
 
     sorted_indices = np.argsort(choose_score_list)[::-1]
     # this sort list not include the empty frame
@@ -196,21 +194,12 @@ def mdn_strategies(cfg, args, model, ckpt_dir, logger, slice_set, search_num_eac
     return label_pool, unlabel_pool, choose_id
 
 
-def combine_uncer_in_frame(uncertain_list, rules):
+def combine_uncer_in_frame(uncertain_list):
     """
-
     :param uncertain_list: list [ndarray]
-    :param rules:
     :return:
     """
     for i in range(len(uncertain_list)):
-        if rules == 1:
-            uncertain_list[i] = np.max(uncertain_list[i])
-        elif rules == 2 or rules == 8:
-            uncertain_list[i] = np.sum(uncertain_list[i])
-        else:
-            # if the rule is 6 or 7, we use eu or eu + au, so we need to use mean the express the au of frame
-            uncertain_list[i] = np.mean(uncertain_list[i])
-
+        uncertain_list[i] = np.mean(uncertain_list[i])
 
     return np.array(uncertain_list)

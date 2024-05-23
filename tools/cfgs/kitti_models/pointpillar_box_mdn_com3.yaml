@@ -169,9 +169,14 @@ OPTIMIZATION:
     GRAD_NORM_CLIP: 10
 
 ACTIVE_TRAIN:
-    STAT_K: {
-              'cate_k':0.223,
-              # 'scale_k':0.147,
-              'scale_k':0,
-              'rot_k':0
-    }
+    TOTAL_LOOP: 5
+    INIT_SET_LEN: 50
+    SEARCH_NUM_EACH: 50
+    LOOP_EPOCHS: 10
+    EPOCH_STEP: 2
+    K1: 3
+    K2: 2.5
+
+    SCORE_THRESH: 0.3
+    AU_THETA: 0.5
+    EU_THETA: 1.0

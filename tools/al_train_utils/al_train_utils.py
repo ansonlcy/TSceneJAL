@@ -15,8 +15,8 @@ from pcdet.models import load_data_to_gpu, build_network, model_fn_decorator
 from .optimization import build_optimizer, build_scheduler
 from tensorboardX import SummaryWriter
 from pcdet.query_strategies.mdn_change_data_pool import mdn_strategies
-from pcdet.query_strategies.common_change_data_pool import random_change_data_pool, change_data_pool_by_difficulty
-from pcdet.query_strategies.similarity_change_data_pool import similarity_strategies
+from pcdet.query_strategies.common_change_data_pool import random_change_data_pool
+from pcdet.query_strategies.multi_stage_change_data_pool import multi_stage_strategies
 from pcdet.query_strategies.stat_mdn_change_data_pool import stat_mdn_strategies
 from pcdet.query_strategies.badge_change_data_pool import badge_strategies
 from pcdet.query_strategies.coreset_change_data_pool import coreset_strategies
@@ -212,7 +212,7 @@ def save_pool(label_pool, unlabel_pool, dir):
 
 
 def al_loop_train(cfg, args, logger, total_loop, init_set_len=1000,
-                  search_num_each=500, loop_epochs=100, epoch_step=2, stat_k=None, k1=3, k2=2):
+                  search_num_each=500, loop_epochs=100, epoch_step=2, k1=3, k2=2):
     # first use the init data to train the init model
 
     output_dir = cfg.ROOT_DIR / 'output' / cfg.EXP_GROUP_PATH / cfg.TAG / args.group_name / args.extra_tag
@@ -334,7 +334,7 @@ def al_loop_train(cfg, args, logger, total_loop, init_set_len=1000,
                 str(ckpt_root_dir / f'loop_{cur_loop - 1}' / f'*checkpoint_loop_{cur_loop - 1}_epoch_*.pth'))
             if len(ckpt_list) > 0:
                 ckpt_list.sort(key=lambda x: int(re.search(r'_epoch_(\d+)\.pth', str(x)).group(1)))
-            if args.rules not in [0, 5, 12, 13, 14, 15, 16, 17, 152, 153, 20, 21, 22]:
+            if args.rules not in [0, 13, 14, 15, 16, 17, 152, 153, 20, 21, 22]:
                 label_set, unlabel_set, _ = mdn_strategies(cfg, args, model, ckpt_list[-1], logger,
                                                            (label_set, unlabel_set),
                                                            search_num_each, rules=args.rules,
@@ -343,24 +343,15 @@ def al_loop_train(cfg, args, logger, total_loop, init_set_len=1000,
                                                            score_plus=args.score_plus,
                                                            score_reverse=args.score_reverse,
                                                            consider_other=args.consider_other)
-            elif args.rules == 12:
-                assert stat_k is not None, "stat_k should not be None when rules is 12"
-                label_set, unlabel_set, _ = stat_mdn_strategies(cfg, args, model, ckpt_list[-1], logger,
-                                                                (label_set, unlabel_set),
-                                                                search_num_each, rules=args.rules,
-                                                                score_thresh=args.score_thresh, eu_theta=args.eu_theta,
-                                                                au_theta=args.au_theta,
-                                                                score_plus=args.score_plus,
-                                                                score_reverse=args.score_reverse,
-                                                                stat_k=stat_k, k1=k1)
+
             elif args.rules in [13, 14, 15, 16, 17, 152, 153]:
-                label_set, unlabel_set, _ = similarity_strategies(cfg, args, model, ckpt_list[-1], logger,
-                                                                  (label_set, unlabel_set),
-                                                                  search_num_each, rules=args.rules,
-                                                                  score_thresh=args.score_thresh,
-                                                                  eu_theta=args.eu_theta,
-                                                                  au_theta=args.au_theta,
-                                                                  k1=k1, k2=k2)
+                label_set, unlabel_set, _ = multi_stage_strategies(cfg, args, model, ckpt_list[-1], logger,
+                                                                   (label_set, unlabel_set),
+                                                                   search_num_each, rules=args.rules,
+                                                                   score_thresh=args.score_thresh,
+                                                                   eu_theta=args.eu_theta,
+                                                                   au_theta=args.au_theta,
+                                                                   k1=k1, k2=k2)
             elif args.rules == 20:
                 label_set, unlabel_set, _ = badge_strategies(cfg, args, model, ckpt_list[-1], logger,
                                                              (label_set, unlabel_set), search_num_each)
@@ -375,9 +366,7 @@ def al_loop_train(cfg, args, logger, total_loop, init_set_len=1000,
 
             elif args.rules == 0:
                 label_set, unlabel_set = random_change_data_pool(logger, (label_set, unlabel_set), search_num_each)
-            elif args.rules == 5:
-                label_set, unlabel_set = change_data_pool_by_difficulty(cfg, args, logger, (label_set, unlabel_set),
-                                                                        search_num_each)
+
             else:
                 raise NotImplementedError
 
@@ -624,18 +613,10 @@ if __name__ == "__main__":
     model.cuda()
     model.eval()
 
-    stat_k = {"cate_k": 0.223, "scale_k": 0.147, "rot_k": 0.113}
-
-    # label_set, unlabel_set, choose_id = stat_mdn_strategies(cfg, args, model, ckpt, logger, (label_pool, unlabel_pool),
-    #                                                         10, rules=args.rules, score_thresh=args.score_thresh,
-    #                                                         au_theta=args.au_theta, score_plus=False,
-    #                                                         score_reverse=False,
-    #                                                         stat_k=stat_k)
-
-    label_set, unlabel_set, choose_id = similarity_strategies(cfg, args, model, ckpt, logger,
-                                                              (label_pool, unlabel_pool),
-                                                              20, rules=args.rules, score_thresh=args.score_thresh,
-                                                              au_theta=args.au_theta, k1=2)
+    label_set, unlabel_set, choose_id = multi_stage_strategies(cfg, args, model, ckpt, logger,
+                                                               (label_pool, unlabel_pool),
+                                                               20, rules=args.rules, score_thresh=args.score_thresh,
+                                                               au_theta=args.au_theta, k1=2)
 
     # label_set, unlabel_set, choose_id = crb_strategies(cfg, args, model, ckpt, logger, (label_pool, unlabel_pool), search_num_each=20, k1=3, k2=2)
     # label_set, unlabel_set, choose_id = coreset_strategies(cfg, args, model, ckpt, logger, (label_pool, unlabel_pool),

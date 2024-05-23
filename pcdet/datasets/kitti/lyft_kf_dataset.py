@@ -642,7 +642,7 @@ class KittiDataset(DatasetTemplate):
         return data_dict
 
 
-def create_kitti_infos(dataset_cfg, class_names, data_path, save_path, workers=4):
+def create_lyft_infos(dataset_cfg, class_names, data_path, save_path, workers=4):
     dataset = KittiDataset(dataset_cfg=dataset_cfg, class_names=class_names, root_path=data_path, training=False)
     train_split, val_split = 'train', 'val'
 
@@ -657,17 +657,17 @@ def create_kitti_infos(dataset_cfg, class_names, data_path, save_path, workers=4
     kitti_infos_train = dataset.get_infos(num_workers=workers, has_label=True, count_inside_pts=True)
     with open(train_filename, 'wb') as f:
         pickle.dump(kitti_infos_train, f)
-    print('Kitti info train file is saved to %s' % train_filename)
+    print('Lyft info train file is saved to %s' % train_filename)
 
     dataset.set_split(val_split)
     kitti_infos_val = dataset.get_infos(num_workers=workers, has_label=True, count_inside_pts=True)
     with open(val_filename, 'wb') as f:
         pickle.dump(kitti_infos_val, f)
-    print('Kitti info val file is saved to %s' % val_filename)
+    print('Lyft info val file is saved to %s' % val_filename)
 
     with open(trainval_filename, 'wb') as f:
         pickle.dump(kitti_infos_train + kitti_infos_val, f)
-    print('Kitti info trainval file is saved to %s' % trainval_filename)
+    print('Lyft info trainval file is saved to %s' % trainval_filename)
 
     # dataset.set_split('test')
     # kitti_infos_test = dataset.get_infos(num_workers=workers, has_label=False, count_inside_pts=False)
@@ -692,7 +692,7 @@ if __name__ == '__main__':
 
         dataset_cfg = EasyDict(yaml.safe_load(open(sys.argv[2])))
         ROOT_DIR = (Path(__file__).resolve().parent / '../../../').resolve()
-        create_kitti_infos(
+        create_lyft_infos(
             dataset_cfg=dataset_cfg,
             class_names=['Car', 'Truck', 'Bus', 'Emergency_vehicle', 'Other_vehicle',
               'Motorcycle', 'Bicycle', 'Pedestrian'],

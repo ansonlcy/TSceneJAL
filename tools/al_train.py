@@ -107,28 +107,15 @@ def main():
     # al_loop_train(cfg, args, logger, total_loop=5, init_set_len=200, search_num_each=200, loop_epochs=50, epoch_step=2,
     #               stat_k=stat_k, k1=3, k2=2.5)
 
-    al_loop_train(cfg, args, logger, total_loop=5, init_set_len=50, search_num_each=50, loop_epochs=10, epoch_step=2,
-                  stat_k=stat_k, k1=3, k2=2.5)
+    al_loop_train(cfg, args, logger, total_loop=cfg.ACTIVE_TRAIN.TOTAL_LOOP, init_set_len=cfg.ACTIVE_TRAIN.INIT_SET_LEN,
+                  search_num_each=cfg.ACTIVE_TRAIN.SEARCH_NUM_EACH, loop_epochs=cfg.ACTIVE_TRAIN.LOOP_EPOCHS,
+                  epoch_step=cfg.ACTIVE_TRAIN.EPOCH_STEP, k1=cfg.ACTIVE_TRAIN.K1, k2=cfg.ACTIVE_TRAIN.K2)
 
-    # fasthest sampling test
-    # al_loop_train(cfg, args, logger, total_loop=1, init_set_len=200, search_num_each=200, loop_epochs=50, epoch_step=2,
-    #               stat_k=stat_k, k1=3, k2=2.5)
-
-
-    # more data test
-    # al_loop_train(cfg, args, logger, total_loop=17, init_set_len=200, search_num_each=200, loop_epochs=50, epoch_step=2,
-    #               stat_k=stat_k, k1=3, k2=2.5)
-
-    # al_loop_train(cfg, args, logger, total_loop=7, init_set_len=200, search_num_each=200, loop_epochs=50, epoch_step=2,
-    #               stat_k=stat_k, k1=2)
 
     # lyft config
     # al_loop_train(cfg, args, logger, total_loop=5, init_set_len=400, search_num_each=400, loop_epochs=10, epoch_step=2,
     #               stat_k=stat_k, k1=3, k2=2)
 
-    # budgest test and k test in kitti
-    # al_loop_train(cfg, args, logger, total_loop=args.total_loop, init_set_len=args.init_set_len, search_num_each=args.search_num_each, loop_epochs=args.loop_epochs, epoch_step=args.epoch_step,
-    #               stat_k=stat_k, k1=args.k1, k2=args.k2)
 
 
 if __name__ == '__main__':
