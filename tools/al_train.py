@@ -1,10 +1,11 @@
-import _init_path
+import sys
+sys.path.insert(0, '../')
 import argparse
 import datetime
 import glob
 import os
 from pathlib import Path
-from test import repeat_eval_ckpt
+
 import random
 
 import torch
@@ -75,6 +76,7 @@ def parse_config():
 
 
 def main():
+
     torch.set_num_threads(1)
     args, cfg = parse_config()
     dist_train = False
