@@ -1,0 +1,21 @@
+rules:
+0 random
+1 max
+2 sum
+3 mean
+4 car_num
+5 by difficulty label
+6 by mc_dropout(eu)
+7 by (theta)*au + eu , au use means
+8 by (theta)*au + eu , au use max
+
+9 二阶段，第一阶段使用类别熵，第二阶段使用theta*au+eu
+
+10 直接使用类别熵
+
+11 confidence
+
+12 二阶段，第一阶段使用统计复杂度，第二阶段使用theta*au+eu
+
+13 三阶段，第一阶段使用类别熵，第二阶段使用theta*au+eu，第三阶段使用similarity
+

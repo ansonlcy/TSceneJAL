@@ -1,0 +1,5 @@
+c1_v1_down_sep
+
+cornerloss 超参数为2， varloss is 1
+down：USE_DOWNSAMPLE: True (384->192->96),
+sep: SEPERATE_VAR: True， x,y,z的var分开计算，否则直接当成一样的
