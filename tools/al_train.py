@@ -5,20 +5,16 @@ import datetime
 import glob
 import os
 from pathlib import Path
-
 import random
-
 import torch
 import torch.nn as nn
 from tensorboardX import SummaryWriter
-
 from pcdet.config import cfg, cfg_from_list, cfg_from_yaml_file, log_config_to_file
 from pcdet.datasets import build_al_dataloader
 from pcdet.models import build_network, model_fn_decorator
 from pcdet.utils import common_utils
 from train_utils.optimization import build_optimizer, build_scheduler
 from al_train_utils.al_train_utils import al_loop_train
-
 import tqdm
 from pcdet.models import load_data_to_gpu
 import numpy as np
@@ -108,7 +104,10 @@ def main():
 
 
     # kitti config
-    al_loop_train(cfg, args, logger, total_loop=5, init_set_len=200, search_num_each=200, loop_epochs=50, epoch_step=2,
+    # al_loop_train(cfg, args, logger, total_loop=5, init_set_len=200, search_num_each=200, loop_epochs=50, epoch_step=2,
+    #               stat_k=stat_k, k1=3, k2=2.5)
+
+    al_loop_train(cfg, args, logger, total_loop=5, init_set_len=50, search_num_each=50, loop_epochs=10, epoch_step=2,
                   stat_k=stat_k, k1=3, k2=2.5)
 
     # fasthest sampling test
