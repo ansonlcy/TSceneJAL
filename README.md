@@ -100,9 +100,6 @@ cd tools
 python al_train.py --cfg_file cfgs/kitti_models/pointpillar_box_mdn_com3.yaml --batch_size 2 --workers 4 --rules 14 --extra_tag al_test --group_name test_group
 ```
 
-# Note
-The instructions regarding code execution still need improvement, and we will update them as soon as possible.
-
 |     Rules     |  Code  |
 |:-------------:|:------:|
 |     Random    |    0   |
@@ -112,6 +109,9 @@ The instructions regarding code execution still need improvement, and we will up
 |    Coreset    |   21   |
 |      Crb      |   22   |
 | **TSceneJAL** | **14** |
+
+# Note
+The instructions regarding code execution still need improvement, and we will update them as soon as possible.
 
 # Acknowledgement
 Our code is based on  [OpenPCDet](https://github.com/open-mmlab/OpenPCDet) and [CRB-active-3Ddet](https://github.com/Luoyadan/CRB-active-3Ddet). Thanks for their awesome codebase.
