@@ -93,12 +93,32 @@ python -m pcdet.datasets.kitti.lyft_kf_dataset create_lyft_infos tools/cfgs/data
 ```
 
 # Active Learning Tranining
-To train the model with the TSceneJAL framework, you can run the following command:
+a. set the active learning config
+```
+cd tools/cfgs/kitti_models/pointpillar_box_mdn_com3.yaml 
+# if train Lyft, change the path to tools/cfgs/lyft_models
+```
+```yaml
+# set the config in yaml file
+ACTIVE_TRAIN:
+    TOTAL_LOOP: 5          # total loop of active learning
+    INIT_SET_LEN: 200      # initial set size
+    SEARCH_NUM_EACH: 200   # number of samples to search in each loop
+    LOOP_EPOCHS: 50        # number of epochs in fisrt loop
+    EPOCH_STEP: 2          # step of epoch in each loop （eg. 50, 52, 54, 56, 58)
+    K1: 3                  # number of samples（K1*SEARCH_NUM_EACH) selected in first stage 
+    K2: 2.5                # number of samples（K2*SEARCH_NUM_EACH) selected in second stage
+```
 
+b. do active learning training
+
+To train the model with the TSceneJAL framework, you can run the following command:
 ```
 cd tools
 python al_train.py --cfg_file cfgs/kitti_models/pointpillar_box_mdn_com3.yaml --batch_size 2 --workers 4 --rules 14 --extra_tag al_test --group_name test_group
 ```
+
+The ```--rules``` parameter is used to specify the active learning strategy. The rules are defined as follows:
 
 |     Rules     |  Code  |
 |:-------------:|:------:|
