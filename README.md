@@ -93,7 +93,7 @@ python -m pcdet.datasets.kitti.lyft_kf_dataset create_lyft_infos tools/cfgs/data
 ```
 
 # Active Learning Tranining
-a. set the active learning config
+a. Set the active learning config
 ```
 cd tools/cfgs/kitti_models/pointpillar_box_mdn_com3.yaml 
 # if train Lyft, change the path to tools/cfgs/lyft_models
@@ -106,32 +106,60 @@ ACTIVE_TRAIN:
     SEARCH_NUM_EACH: 200   # number of samples to search in each loop
     LOOP_EPOCHS: 50        # number of epochs in fisrt loop
     EPOCH_STEP: 2          # step of epoch in each loop （eg. 50, 52, 54, 56, 58)
-    K1: 3                  # number of samples（K1*SEARCH_NUM_EACH) selected in first stage 
-    K2: 2.5                # number of samples（K2*SEARCH_NUM_EACH) selected in second stage
+    K1: 3                  # number of samples(K1*SEARCH_NUM_EACH) selected in first stage 
+    K2: 2.5                # number of samples(K2*SEARCH_NUM_EACH) selected in second stage
 ```
 
-b. do active learning training
+b. Do active learning training
 
 To train the model with the TSceneJAL framework, you can run the following command:
 ```
 cd tools
-python al_train.py --cfg_file cfgs/kitti_models/pointpillar_box_mdn_com3.yaml --batch_size 2 --workers 4 --rules 14 --extra_tag al_test --group_name test_group
+python al_train.py --cfg_file cfgs/kitti_models/pointpillar_box_mdn_com3.yaml --batch_size 2 --workers 4 --rules 14 --extra_tag tag_name --group_name group_name
 ```
 
-The ```--rules``` parameter is used to specify the active learning strategy. The rules are defined as follows:
+The ```--rules``` parameter is used to specify the active learning strategy. Rules are defined as follows:
 
 |     Rules     |  Code  |
 |:-------------:|:------:|
-|     Random    |    0   |
-|   Confidence  |   11   |
-|   MC Dropout  |    6   |
+|    Random     |   0    |
+|  Confidence   |   11   |
+|  MC Dropout   |   6    |
 |     Badge     |   20   |
 |    Coreset    |   21   |
 |      Crb      |   22   |
 | **TSceneJAL** | **14** |
 
-# Note
-The instructions regarding code execution still need improvement, and we will update them as soon as possible.
+c. Results
+
+The results path root is:
+```
+root/of/the/project/output/kitti[lyft]_models/config_name/group_name/tag_name
+```
+
+The result file in path is organized as follows:
+<pre>
+results/path/root/
+    | ckpt/               
+    	| loop_0  # checkpoint in each loop of active learning
+    	| loop_1
+    	   ...
+    | pool/
+        | pool_loop_0.npy  # the idx of selected frames
+        | pool_loop_1.npy
+           ...
+    | tensorboard/
+</pre>
+
+# Evaluation
+
+To evaluate the models, run the following command:
+```
+cd tools
+python al_test.py --cfg_file cfgs/kitti_models/pp_box_mdn/pointpillar_box_mdn_com3.yaml   --root_dir results/path/root --start_loop 0 --end_loop 5
+```
+
+If you only want to evaluate one loop(e.g. The final loop), set ```start_loop```= ```end_loop```= specific loop num
 
 # Acknowledgement
 Our code is based on  [OpenPCDet](https://github.com/open-mmlab/OpenPCDet) and [CRB-active-3Ddet](https://github.com/Luoyadan/CRB-active-3Ddet). Thanks for their awesome codebase.

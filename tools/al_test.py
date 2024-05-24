@@ -32,7 +32,7 @@ def parse_config():
     parser.add_argument('--root_dir', type=str, default=None, help='The root dir when eval')
     parser.add_argument('--start_loop', type=int, default=0, help='The start eval loop')
     parser.add_argument('--end_loop', type=int, default=5, help='The end of tht eval loop')
-    parser.add_argument('--eval_num_per_loop', type=int, default=20, help='The number of epochs on each loop eval')
+    parser.add_argument('--eval_num_per_loop', type=int, default=1, help='The number of epochs on each loop eval')
     parser.add_argument('--fix_loop', action='store_true', default=False, help='if we use single loop train')
 
 
