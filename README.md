@@ -8,19 +8,13 @@ Code release for the paper **TSceneJAL: Joint Active Learning of Traffic Scenes 
 This repo is an implementation of our **JST** framework with PyTorch (v1.8.0). The implementation is based on [OpenPCDet](https://github.com/open-mmlab/OpenPCDet) and [CRB-active-3Ddet](https://github.com/Luoyadan/CRB-active-3Ddet).
 
 # Benchmark
-KITTI Experiment:
+The model trained by TSceneJAL on partly KITTI and Lyft(KITTI format) datasets:
 
-|  Method   | mAP_3D<br/>(Easy) | mAP_3D<br/>(Mod.) | mAP_3D<br/>(Hard) | mAP_3D<br/>(Easy) | mAP_3D<br/>(Mod.) | mAP_3D<br/>(Hard) |                                                                                       Checkpoint                                                                                       |
-|:---------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|  Random   |       70.68       |       58.75       |       55.28       |       75.19       |       64.40       |       60.98       |                                            [model](https://drive.google.com/drive/folders/1MCepa2eav2tcmaXgS_7pFjIowX1n9ucN?usp=drive_link)                                            |
-| TSceneJAL |       73.21       |       61.32       |       57.54       |       77.51       |       66.91       |       63.23       |                                            [model](https://drive.google.com/drive/folders/13WxvyjiSiA0crxTHShGfyhs3uHqY1oty?usp=drive_link)                                            |
+| Dataset | mAP_3D<br/>(Easy) | mAP_3D<br/>(Mod.) | mAP_3D<br/>(Hard) | mAP_3D<br/>(Easy) | mAP_3D<br/>(Mod.) | mAP_3D<br/>(Hard) |                                            Checkpoint                                            |
+|:-------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:------------------------------------------------------------------------------------------------:|
+|  KITTI  |       73.21       |       61.32       |       55.28       |       75.19       |       64.40       |       60.98       | [model](https://drive.google.com/drive/folders/13WxvyjiSiA0crxTHShGfyhs3uHqY1oty?usp=drive_link) |
+|  Lyft   |       32.49       |       29.56       |       29.26       |       36.66       |       34.91       |       34.49       | [model](https://drive.google.com/drive/folders/11s_Gk3L79hq-H8HmEsYUfLnxIbX9K8vi?usp=drive_link) |
 
-Lyft Experiment:
-
-|  Method   | mAP_3D<br/>(Easy) | mAP_3D<br/>(Mod.) | mAP_3D<br/>(Hard) | mAP_3D<br/>(Easy) | mAP_3D<br/>(Mod.) | mAP_3D<br/>(Hard) |                                                                                       Checkpoint                                                                                       |
-|:---------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|  Random   |       30.62       |       27.87       |       27.27       |       34.32       |       32.58       |       31.95       |                                            [model](https://drive.google.com/drive/folders/1VdE3vlrzG7kHgEOiPW_2hbsJ--W-piJv?usp=drive_link)                                            |
-| TSceneJAL |       32.49       |       29.56       |       29.26       |       36.66       |       34.91       |       34.49       |                                            [model](https://drive.google.com/drive/folders/11s_Gk3L79hq-H8HmEsYUfLnxIbX9K8vi?usp=drive_link)                                            |
 
 # Installation
 All the codes are tested in the following environment:
